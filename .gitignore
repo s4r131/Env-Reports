@@ -1,0 +1,27 @@
+# Source data — must not be committed (contains internal SharePoint paths)
+*.csv
+*.xlsx
+*.xls
+
+# Windows artifacts
+Thumbs.db
+Thumbs.db:encdata
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS artifacts
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VS Code personal settings
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# Vim/Emacs swap files
+*.swp
+*.swo
+*~

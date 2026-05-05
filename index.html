@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Environmental Reports — Cal State LA</title>
+<style>
+:root{--black:#000000;--darkgray:#4A4F55;--gold:#FFCE00;--marigold:#FCB237;--golden:#A18528;--bg:#f0f2f7;--card:#fff;--border:#dde1e9;--muted:#6b7280}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);font-size:13px;color:#111827}
+header{background:var(--black);color:#fff;padding:9px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.brand{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;border-right:2px solid var(--gold);padding-right:12px}
+.title{font-size:15px;font-weight:600}
+.wrap{padding:12px 14px;max-width:1700px;margin:0 auto}
+.top{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;flex:1;min-width:0}
+.fc{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:9px 11px}
+.fc-h{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--black);margin-bottom:7px;padding-bottom:5px;border-bottom:2px solid var(--gold)}
+.cbl{max-height:182px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.ygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;max-height:182px;overflow-y:auto}
+.cbl label,.ygrid label{display:flex;align-items:center;gap:5px;cursor:pointer;padding:2px 4px;border-radius:3px;font-size:12px;white-space:nowrap}
+.cbl label:hover,.ygrid label:hover{background:#fffbe6}
+input[type=checkbox]{accent-color:var(--golden);cursor:pointer;flex-shrink:0}
+.scol{display:flex;flex-direction:column;gap:8px;min-width:148px;flex-shrink:0}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px 13px;text-align:center}
+.scv{font-size:28px;font-weight:700;color:var(--black);line-height:1}
+.scv.sm{font-size:14px}
+.scl{font-size:10px;color:var(--muted);margin-top:4px}
+.btn{padding:7px;background:var(--black);color:var(--gold);border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;width:100%}
+.btn:hover{background:var(--darkgray)}
+.tc{background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.ts{overflow-x:auto;max-height:calc(100vh - 360px);overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--black);color:#fff;padding:7px 9px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:2;cursor:pointer;user-select:none}
+thead th:hover{background:var(--darkgray)}
+.si{margin-left:3px;font-size:9px;opacity:.7}
+tbody tr:nth-child(even){background:#f7f9fd}
+tbody tr:hover{background:#fffbe6}
+tbody td{padding:6px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tdt{max-width:310px;word-break:break-word;line-height:1.3}
+.tdl a{color:var(--black);text-decoration:none;font-weight:600;padding:2px 7px;border:1px solid var(--black);border-radius:4px;white-space:nowrap;font-size:11px}
+.tdl a:hover{background:var(--black);color:var(--gold)}
+tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid var(--border);font-weight:600}
+.sb{padding:4px 11px;font-size:10px;color:var(--muted);border-top:1px solid var(--border)}
+@media(max-width:900px){.fgrid{grid-template-columns:1fr 1fr}.top{flex-direction:column}.scol{flex-direction:row;flex-wrap:wrap}.sc{flex:1;min-width:110px}}
+</style>
+</head>
+<body>
+<header>
+  <span class="brand">Cal State LA</span>
+  <span class="title">Environmental Reports Dashboard</span>
+</header>
+<div class="wrap">
+  <div class="top">
+    <div class="fgrid">
+      <div class="fc"><div class="fc-h">Building</div><div class="cbl" id="fB"></div></div>
+      <div class="fc"><div class="fc-h">Hazard</div><div class="cbl" id="fH"></div></div>
+      <div class="fc"><div class="fc-h">Report Type</div><div class="cbl" id="fR"></div></div>
+      <div class="fc"><div class="fc-h">Year</div><div class="ygrid" id="fY"></div></div>
+    </div>
+    <div class="scol">
+      <div class="sc"><div class="scv" id="sC">—</div><div class="scl">Count of Reports</div></div>
+      <div class="sc"><div class="scv sm" id="sL">—</div><div class="scl">Latest Report Date</div></div>
+      <button class="btn" onclick="clr()">Clear All Filters</button>
+    </div>
+  </div>
+  <div class="tc">
+    <div class="ts">
+      <table>
+        <thead><tr>
+          <th onclick="sb('t')">Report Title <span class="si" id="si-t">⇅</span></th>
+          <th onclick="sb('_s')">Year <span class="si" id="si-_s">▼</span></th>
+          <th onclick="sb('q')">Quarter <span class="si" id="si-q">⇅</span></th>
+          <th onclick="sb('mn')">Month <span class="si" id="si-mn">⇅</span></th>
+          <th onclick="sb('dy')">Day <span class="si" id="si-dy">⇅</span></th>
+          <th onclick="sb('h')">Hazard <span class="si" id="si-h">⇅</span></th>
+          <th onclick="sb('rt')">Report Type <span class="si" id="si-rt">⇅</span></th>
+          <th onclick="sb('v')">Vendor <span class="si" id="si-v">⇅</span></th>
+          <th>Report Link</th>
+        </tr></thead>
+        <tbody id="tB"></tbody>
+        <tfoot><tr><td colspan="9" id="tF"></td></tr></tfoot>
+      </table>
+    </div>
+    <div class="sb">92 records &nbsp;|&nbsp; Data as of April 2026 &nbsp;|&nbsp; Cal State LA Environmental Reports</div>
+  </div>
+</div>
+<script>
+const BASE='https://csula.sharepoint.com';
+const MN=['','January','February','March','April','May','June','July','August','September','October','November','December'];
+const RAW=[{"t":"RanchoCastilla-Mold-2026-04-21-Assessment-Unit3108-TerraEnvironmental","d":"4/21/2026","f":"/:b:/s/EnvironmentalReports/IQDAyPZbH3MoS75vgRkCgiueAdCw7UX6MmLM9o_J6iXhcGI","h":"Mold","rt":"Assessment","v":"TerraEnv","b":"RanchoCastilla"},{"t":"E&T-Asbestos-2026-04-20-AirSamplingTEM-EntireBuilding-TerraEnvironmental","d":"4/20/2026","f":"/:b:/s/EnvironmentalReports/IQAoz4eEvf7qQLOLvtLIH9itAdwOaW-qRl4YHwvAHVC97VE","h":"Asbestos","rt":"AirSampling","v":"TerraEnv","b":"E&T"},{"t":"Library-AirQuality-2026-04-20-AirSampling-EntireBuilding-GlobalEnvironmental","d":"4/20/2026","f":"/:b:/s/EnvironmentalReports/IQC6knsaS3U_RJZnQ4iCb7TTAW9XA-GdbYnyB8bolD-jbxc","h":"AirQuality","rt":"AirSampling","v":"GlobalEnvironmental","b":"Library"},{"t":"StudentHealthCenter-Asbestos-2026-03-06-AirSampling-EntireBuilding-GlobalEnvironmental","d":"3/6/2026","f":"/:b:/s/EnvironmentalReports/IQC8b6K2Ii-qSY_0r9fC2hjhARdqzFREPDdu6tr0z6OW2WI","h":"Asbestos","rt":"AirSampling","v":"GlobalEnvironmental","b":"StudentHealthCenter"},{"t":"FineArts-Asbestos-2026-03-06-AirSampling-EntireBuilding-GlobalEnvironmental","d":"3/6/2026","f":"/:b:/s/EnvironmentalReports/IQCMmT8iYpJwRqwOiT4gvTgOAcDbyz1wSSq0zeNqtwLl950","h":"Asbestos","rt":"AirSampling","v":"GlobalEnvironmental","b":"FineArts"},{"t":"MusicBuilding-Asbestos-2026-02-24-AirSampling-EntireBuilding-GlobalEnvironmental","d":"2/24/2026","f":"/:b:/s/EnvironmentalReports/IQBqXJMg3f0xTas7tKDn_CCjAey_itiNBpBvOgClIwZWcQI","h":"Asbestos","rt":"AirSampling","v":"GlobalEnvironmental","b":"Music"},{"t":"CareerCenter-Asbestos-2026-02-24-AirSampling-EntireBuilding-GlobalEnvironmental","d":"2/24/2026","f":"/:b:/s/EnvironmentalReports/IQA_Q4-S0zJDSr_ZTCbyCTDmAYiDokpmpCrgim55m4FNcjw","h":"Asbestos","rt":"AirSampling","v":"GlobalEnvironmental","b":"CareerCenter"},{"t":"SalazarHall-Asbestos-2026-02-24-AirSampling-EntireBuilding-GlobalEnvironmental","d":"2/24/2026","f":"/:b:/s/EnvironmentalReports/IQC2-hUbQYj5QrF_ozudr7M0AQKg_v3xumubgJkbrX_EoWE","h":"Asbestos","rt":"AirSampling","v":"GlobalEnvironmental","b":"SalazarHall"},{"t":"BiologicalSciences-Asbestos-2026-02-24-AirSampling-EntireBuilding-GlobalEnvironmental","d":"2/24/2026","f":"/:b:/s/EnvironmentalReports/IQC5H5Zidx6cTJeIVcBiTCe7ATMoHoJ0dqYOywKwnFv4nlQ","h":"Asbestos","rt":"AirSampling","v":"GlobalEnvironmental","b":"BiologicalSciences"},{"t":"FineArts-Asbestos-2026-01-21-CloseOut-Room138-GlobalEnvironmental","d":"1/21/2026","f":"/:b:/s/EnvironmentalReports/IQDfGCPoeEc6Tbg8t5EJN0bJAX-uKILcT4T7Ft4HwepVBXE","h":"Asbestos","rt":"CloseOut","v":"GlobalEnvironmental","b":"FineArts"},{"t":"KingHall-Asbestos-2026-01-20-AirSampling-EntireBuilding-GlobalEnvironmental","d":"1/20/2026","f":"/:b:/s/EnvironmentalReports/IQBTsLCa8gxKSochyXKCQkfEAY65frc6a4CKTilpqWHh9Dc","h":"Asbestos","rt":"AirSampling","v":"GlobalEnvironmental","b":"KingHall"},{"t":"BiologicalSciences-Mold-2026-01-12-Air_Sampling-Basement2ndFloor-GlobalEnvironmental","d":"1/12/2026","f":"/:b:/s/EnvironmentalReports/IQBgoo9Rjw-iQbwDJXkkyfirAXazcZeuwdI6ZiG07Fq3YRs","h":"Mold","rt":"AmbientAir","v":"GlobalEnvironmental","b":"BiologicalSciences"},{"t":"PEBuilding-Asbestos-2025-12-23-CloseOut-Floor2-GlobalEnvironmental","d":"12/23/2025","f":"/:b:/s/EnvironmentalReports/IQCRIbr9PETNT7Kvsi0gBSXVAf5g5EM8vBu4ekjn3hP6dKg","h":"Asbestos","rt":"CloseOut","v":"GlobalEnvironmental","b":"PEBuilding"},{"t":"Library-Asbestos-2025-12-16-Survey-RoomB131-GlobalEnvironmental","d":"12/16/2025","f":"/:b:/s/EnvironmentalReports/IQDBBZr3rQw0RYOxzmgrddP7ATHooHqWpEzMoeXID1dG1uk","h":"Asbestos","rt":"Survey","v":"GlobalEnvironmental","b":"UniversityLibrary"},{"t":"FineArts-Asbestos-2025-12-15-Survey-Room138-GlobalEnvironmental","d":"12/15/2025","f":"/:b:/s/EnvironmentalReports/IQD3GytfNsYaRID40WIysWa9AeXnnLgUJCg6etV6nZaqU00","h":"Asbestos","rt":"Survey","v":"GlobalEnvironmental","b":"FineArts"},{"t":"BiologicalSciences-Mold-2025-11-24-Ambient Air Sampling-1st 3rd Floor-Global Environmental","d":"11/24/2025","f":"/:b:/s/EnvironmentalReports/IQDA2n8ZEKMLSbehOHPUUEHTAehM5d9x9TRBMY9nVleXjds","h":"Mold","rt":"AirSampling","v":"GlobalEnvironmental","b":"BiologicalSciences"},{"t":"Fine Arts-Mold-2025-11-18-Ambient Air Sampling-Room 138-Global Environmental","d":"11/18/2025","f":"/:b:/s/EnvironmentalReports/IQAijDnctxhNRKzja8WrtIYAAeSzG7usVoWbIHZSUSarYO0","h":"Mold","rt":"AirSampling","v":"GlobalEnvironmental","b":"FineArts"},{"t":"BiologicalSciences-Mold-2025-11-10-AmbientAir-Basement3rdFloor-GlobalEnvironmental","d":"11/10/2025","f":"/:b:/s/EnvironmentalReports/IQBaEDoJIr-FS7s7Zznf826aAXOMLP8scP0enE41dKfi0Zg","h":"Mold","rt":"AirSampling","v":"GlobalEnvironmental","b":"BiologicalSciences"},{"t":"BiologicalSciences-Mold-2025-10-29-Ambient Air Sampling-Basement 3rd Floor-Global Environmental","d":"10/29/2025","f":"/:b:/s/EnvironmentalReports/IQCEn_y0ATdMRqzta1wmXH-LAd5N8qmMELQro7tNb5XpaXE","h":"Mold","rt":"AirSampling","v":"GlobalEnvironmental","b":"BiologicalSciences"},{"t":"BiologicalSciences-Lead-2025-10-24-Survey-Basement3rdFloor-GlobalEnvironmental","d":"10/24/2025","f":"/:b:/s/EnvironmentalReports/IQAvu9GMZYQMT7wgzoFvUCZhAdDxibAPiSc2sXuvAaDy6OQ","h":"Lead","rt":"Survey","v":"GlobalEnvironmental","b":"BiologicalSciences"},{"t":"BiologicalSciences-Asbestos-2025-10-24-Survey-Basement3rdFloor-GlobalEnvironmental","d":"10/24/2025","f":"/:b:/s/EnvironmentalReports/IQDxSCMjW0yhQYw7hp_fNSXXAWWOXz7RbP5W27Ujar8v-q8","h":"Asbestos","rt":"Survey","v":"GlobalEnvironmental","b":"BiologicalSciences"},{"t":"KingHall-Asbestos-2025-04-29-Air_Sampling-RoomsD2078D2078ED2078F-GlobalEnvironmental","d":"4/29/2025","f":"/:b:/s/EnvironmentalReports/IQCRyHBxrwkuSbbXVlQgWwx_AeU5u7jFjWm-fyKFssN6Odo","h":"Asbestos","rt":"AirSampling","v":"GlobalEnvironmental","b":"KingHall"},{"t":"KingHall-Mold-2024-02-26-Assessments-EntireBuilding-TerraEnvironmental","d":"2/26/2024","f":"/:b:/s/EnvironmentalReports/IQCqvzziMlanTICtSXuFmv6RAQ7as2nUk_NL1L99NfrRQGM","h":"Mold","rt":"Assessment","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Lead-2024-02-26-AirQuality-EntireBuilding-TerraEnvironmental","d":"2/26/2024","f":"/:b:/s/EnvironmentalReports/IQDkX0nbUzF1T54cufBV8DiaASrRBzSzJtb2F3vvpNEYtOA","h":"Lead","rt":"AmbientAir","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2024-02-26-AirQuality-EntireBuilding-TerraEnvironmental","d":"2/26/2024","f":"/:b:/s/EnvironmentalReports/IQCwgSOZZgaYS5F8QovNH2VsAb170m1_V4dkA32qhWp1uJo","h":"Asbestos","rt":"AmbientAir","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Mold-2024-02-09-Assessments-EntireBuilding-TerraEnvironmental","d":"2/9/2024","f":"/:b:/s/EnvironmentalReports/IQA-1wYgAfkORqNuv5M1OlrNATL-7kb_7MF2WPACoARmHNA","h":"Mold","rt":"Assessment","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2024-02-09-Surveys-VariousFloors-TerraEnvironmental","d":"2/9/2024","f":"/:b:/s/EnvironmentalReports/IQAsIuw-yXnIQ6NW9RDPJfjoAVaNkHtn1KMqJBZZPhcyFJ0","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-AirQuality-2023-07-31-Room3036-GlobalEnvironmental","d":"7/31/2023","f":"/:b:/s/EnvironmentalReports/IQAJVAdlSWIzQq793QtxV5OnAZ5UiuQaAlFJxnhYzM5cas4","h":"AirQuality","rt":"AmbientAir","v":"GlobalEnvironmental","b":"KingHall"},{"t":"KingHall-Asbestos-2023-05-24-Surveys-Roof-TerraEnvironmental","d":"5/24/2023","f":"/:b:/s/EnvironmentalReports/IQBHfDmggobFQ6lnNXV-DM6tAUGWDd-y9vOhQRjPQK72N2E","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"Music-Asbestos-2023-05-24-Surveys-Roof-TerraEnvironmental","d":"5/24/2023","f":"/:b:/s/EnvironmentalReports/IQBbYskjP0ASTZyZwceOJ-YJAR-14syClH9tz7h1o4wjAPs","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"Music"},{"t":"TVFilm-Asbestos-2023-05-24-Surveys-Roof-TerraEnvironmental","d":"5/24/2023","f":"/:b:/s/EnvironmentalReports/IQCAYrRWSa3HQ7pPR9s7Z7i7AbQK_-dgfV9WMBj7IRS0aBs","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"TVFM"},{"t":"StudentHealthCenter-Asbestos-2023-05-24-Surveys-Roof-TerraEnvironmental","d":"5/24/2023","f":"/:b:/s/EnvironmentalReports/IQBZ6Ow5GqUBRImeGmF8GqHmAR3pFkYIB459MM2Zu2Uxkt8","h":"Asbestos","rt":"Inspection","v":"TerraEnv","b":"StudentHealthCenter"},{"t":"FineArts-Asbestos-2023-05-24-Surveys-Roof-TerraEnvironmental","d":"5/24/2023","f":"/:b:/s/EnvironmentalReports/IQAzS6k3BOjPSoMQf5ohlSNkAZFPYkZ7pnItuFnrxgS59Yc","h":"Asbestos","rt":"Inspection","v":"TerraEnv","b":"FineArts"},{"t":"PhysicalEducation-Asbestos-2023-03-09-Surveys-Room14-TerraEnvironmental","d":"3/9/2023","f":"/:b:/s/EnvironmentalReports/IQAWXOXvHRoyQJJtIjOsF6RSAUCBs-jBQOFON6AVsbmB51E","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"PEBuilding"},{"t":"KingHall-Asbestos-2023-02-01-Surveys-Rooms4061and4056-TerraEnvironmental","d":"2/1/2023","f":"/:b:/s/EnvironmentalReports/IQDZRP6pyWYhTaYeCvggqPGIASDEx2TwrM4OPfiBROXFkoc","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"PhysicalEducation-Asbestos-2023-02-01-Surveys-2ndFloorSteamPipesRoom202-TerraEnvironmental","d":"2/1/2023","f":"/:b:/s/EnvironmentalReports/IQB0dQidYDbGTpPP5T-uq8wHAZxio2bDgjlh5gYXhbbib7o","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"PEBuilding"},{"t":"FineArts-Asbestos-2021-12-23-ClearanceReport-Room247248-TerraEnvironmental","d":"12/23/2021","f":"/:b:/s/EnvironmentalReports/IQB--ohP7-VaR4frixSzQ4wMAdKQe4OcxbMyJ5ygsyZi-Jw","h":"Asbestos","rt":"Clearance","v":"TerraEnv","b":"FineArts"},{"t":"PhysicalSciencesBuilding-Lead-2020-11-25-CloseOut-EntireBuilding-TerraEnvironmental","d":"11/25/2020","f":"/:b:/s/EnvironmentalReports/IQAxA_MyzR6jSoaxMOWRRGwOAfkFHyPy-ctxGG_UqG4IWaw","h":"Lead","rt":"CloseOut","v":"TerraEnv","b":"PhysicalSciencesBuilding"},{"t":"RanchoCastilla-Mold-2020-11-04-Inspection-Unit226VanityRoom-TerraEnv","d":"11/4/2020","f":"/:b:/s/EnvironmentalReports/IQD5H4aQdpn9SKkNz3aP40QZAfls-4swlalnf3vIABd245Q","h":"Mold","rt":"Inspection","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Lead-2020-11-04-Survey-Unit226-TerraEnv","d":"11/4/2020","f":"/:b:/s/EnvironmentalReports/IQBRvx3bFp6iQrYl_UzhnJ3hAQonLeSl1ztXIiDwj39f_QQ","h":"Lead","rt":"Survey","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Mold-2020-11-04-Inspection-Unit126-TerraEnv","d":"11/4/2020","f":"/:b:/s/EnvironmentalReports/IQBIhjs-cmY5R5Rsq6199Em6AfPgPaXh_FEQmF6zjbiL1Oc","h":"Mold","rt":"Inspection","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Asbestos-2020-11-04-Survey-Unit226-TerraEnv","d":"11/4/2020","f":"/:b:/s/EnvironmentalReports/IQB6ZKBcr04zTpsqfoAcsxbPAcgsTgqT-yNspgrEAQB8O-A","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Lead-2020-11-04-Survey-Unit126-TerraEnv","d":"11/4/2020","f":"/:b:/s/EnvironmentalReports/IQCcCN597IIfTJEVmhiK1uiSAd0NjeXdr98l2lvdfBRDIM0","h":"Lead","rt":"Survey","v":"TerraEnv","b":"RanchoCastilla"},{"t":"PhysicalSciences-Asbestos-2020-10-01-Survey-Floor3-TerraEnv","d":"10/1/2020","f":"/:b:/s/EnvironmentalReports/IQC54EDnMrnYQJa96gI7Z0XrAX8lb_hY-Q0MohVZET_MdJM","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"PhysicalSciences"},{"t":"E&T-HazMat-2020-08-19-Survey-ElectricalSwitchBox-TerraEnv","d":"8/19/2020","f":"/:b:/s/EnvironmentalReports/IQBVtuluc3cBT78fn_DZqW9JAQqBmKnOnrz8TkaScHP_MJA","h":"HazMat","rt":"Assessment","v":"TerraEnv","b":"E&T"},{"t":"RanchoCastilla-Mold-2020-07-21-PostRemediation-Unit103-TerraEnv","d":"7/21/2020","f":"/:b:/s/EnvironmentalReports/IQDfiCtY6-5hSYM2cefVQ-pEAdl_t1KsSY536jVAe98q_XI","h":"Mold","rt":"Inspection","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Lead-2020-07-15-Survey-Unit103-TerraEnv","d":"7/15/2020","f":"/:b:/s/EnvironmentalReports/IQBcpJ3E6CBcTLX9txJkXmGoAehup_MnnJA-SynUrqkOnN8","h":"Lead","rt":"Survey","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Asbestos-2020-06-29-Survey-MailRoom-TerraEnv","d":"6/29/2020","f":"/:b:/s/EnvironmentalReports/IQCYPjdtTIe2T6ME1MYNCFCrAbeGpgA9Ma-aUM7zUc3c0Ts","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Lead-2020-06-29-Survey-MailRoom-TerraEnv","d":"6/29/2020","f":"/:b:/s/EnvironmentalReports/IQCmNgtK2CblTZAjA4dNFEQ2AVf-ZIUtR42tb_Ct3rJqOCE","h":"Lead","rt":"Survey","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Asbestos-2020-05-28-CloseOut-Roof-TerraEnv","d":"5/28/2020","f":"/:b:/s/EnvironmentalReports/IQCHgFoemEXqTJ8sayMVnBwFAehAFzv36A74PrmaFZC8uMg","h":"Asbestos","rt":"CloseOut","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Asbestos-2020-05-15-Survey-Units11031203-1303-TerraEnv","d":"5/15/2020","f":"/:b:/s/EnvironmentalReports/IQCAWciXU6Y3SKmNwfc5FcWrAeJS5Tt42qPt3ITq7elO8xI","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"RanchoCastilla"},{"t":"RanchoCastilla-Lead-2020-05-15-Survey-Units11031203-1303-TerraEnv","d":"5/15/2020","f":"/:b:/s/EnvironmentalReports/IQAEh45J75jyT4QaGdLdAWaFAWX3UlVByzTs9GbZ0XyaXaY","h":"Lead","rt":"Survey","v":"TerraEnv","b":"RanchoCastilla"},{"t":"KingHall-Asbestos-2020-03-11-Surveys-Room3098B-TerraEnvironmental","d":"3/11/2020","f":"/:b:/s/EnvironmentalReports/IQCWWL7EhvSgS4LiTcvffwkqAe1-Oaxmi5F2UaBXAC4e2Dw","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"RanchoCastilla-Soil-2020-02-06-Assessment-ImportFillEvaluation-TerraEnv","d":"2/6/2020","f":"/:b:/s/EnvironmentalReports/IQDpJfHYHoulSbxy0ldp-EGlAZA1T4L4bhQRjLb28wi2yx8","h":"Soil","rt":"Assessment","v":"TerraEnv","b":"RanchoCastilla"},{"t":"KingHall-Asbestos-2020-02-04-Surveys-TransitePipeNorthEnd-TerraEnvironmental","d":"2/4/2020","f":"/:b:/s/EnvironmentalReports/IQDixkuWaZ6lQ6poe5AW1nT0AYES8ScX6wyLkrVvCJ9kr-Y","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"GoldenEagle-AirQuality-2020-02-03-Assessment-Office216-TerraEnv","d":"2/3/2020","f":"/:b:/s/EnvironmentalReports/IQBK-fH1JJ-DTJjOMYYjDDFoAXhcZaKvhLHREiCEaCfp9ms","h":"AirQuality","rt":"Assessment","v":"TerraEnv","b":"GoldenEagle"},{"t":"Music-Asbestos-2020-01-14-Survey-Room234-TerraEnv","d":"1/14/2020","f":"/:b:/s/EnvironmentalReports/IQCa4N8fIre7TYe46Z5vIpyIAc_xBALbqVcwlSL30qjdig0","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"Music"},{"t":"KingHall-Asbestos-2019-10-31-Surveys-Room3098C-TerraEnvironmental","d":"10/31/2019","f":"/:b:/s/EnvironmentalReports/IQC7S6DWwSrFTYoaApva2kIbASoor9r5x-D1Q10yWSkV_X4","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"Library-AirQuality-2019-09-11-Assessments-Rooms2079208120872088-ATechConsulting","d":"9/11/2019","f":"/:b:/s/EnvironmentalReports/IQBjrHpZqb6pRrut-vgFBmX5AWoO8Grj058Pz0ONOQhfPVE","h":"AirQuality","rt":"Assessment","v":"ATechConsulting","b":"JFKLibrary"},{"t":"KingHall-Asbestos-2019-08-12-Surveys-Room1064-TerraEnvironmental","d":"8/12/2019","f":"/:b:/s/EnvironmentalReports/IQAToh5BaEyXRJxkuZOWd8r-AQPwqdMxmcmiRrGFUhfotSw","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2019-08-08-Surveys-Room1064-TerraEnvironmental","d":"8/8/2019","f":"/:b:/s/EnvironmentalReports/IQDTOYQQspYkQZhnYtvGxff1AbqduXQPHizqgeM6YXrWL2Q","h":"AirQuality","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"Library-Asbestos-2019-08-01-Surveys-EntireBuilding-TerraEnvironmental","d":"8/1/2019","f":"/:b:/s/EnvironmentalReports/IQBWXv6MirkASIaVLnr1MPqSAZYA8cCgM4OIdJgWFVBj79w","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"JFKLibrary"},{"t":"KingHall-Asbestos-2019-03-25-Clearance-RoomD139-ATechConsulting","d":"3/25/2019","f":"/:b:/s/EnvironmentalReports/IQBskl-wqM-LTq2RZgCR1_3tAU9tSBwtl6dYYyWxtdF9ykM","h":"Asbestos","rt":"Clearance","v":"ATechConsulting","b":"KingHall"},{"t":"KingHall-Asbestos-2019-03-15-Survey-RoomB1024-ATechConsulting","d":"3/15/2019","f":"/:b:/s/EnvironmentalReports/IQDxUf0leknIS7G2ZFPRV8VgAVF884hGCqRHA4HK-YhkMSs","h":"Asbestos","rt":"Survey","v":"ATechConsulting","b":"KingHall"},{"t":"KingHall-Asbestos-2019-01-02-Surveys-ElevatorByRoomC130-TerraEnvironmental","d":"1/2/2019","f":"/:b:/s/EnvironmentalReports/IQCqDd29r-l2QJ2PoHm4AIA6AX6Er-rY4RLUf_fMlHqz0O0","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-11-26-Clearance-RoomC129-TerraEnvironmental","d":"11/26/2018","f":"/:b:/s/EnvironmentalReports/IQAOL2aun-C_R66gJGLTu8-4AejurZKQG2_jFuFKm5YHcAc","h":"Asbestos","rt":"Clearance","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Lead-2018-11-06-Surveys-Room129-TerraEnvironmental","d":"11/6/2018","f":"/:b:/s/EnvironmentalReports/IQDyiNFxyljTRbmWV27yBhzHASBkWb7cwKNn2EgMJwJ6vbY","h":"Lead","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-HazMat-2018-11-01-Survey-RoomC129-TerraEnvironmental","d":"11/1/2018","f":"/:b:/s/EnvironmentalReports/IQAvKsxG3b6gQ7DPT3Ha3tK2Ae4hxp6QpW4PtaRMMKdkPsk","h":"HazMat","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-10-23-Surveys-RoomC129-TerraEnvironmental","d":"10/23/2018","f":"/:b:/s/EnvironmentalReports/IQCxCJWurGizQ4RLPM3Wh7YjAUo56Ngz93QTNenAarCLprk","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-08-13-Clearance-RoomD150E-TerraEnvironmental","d":"8/13/2018","f":"/:b:/s/EnvironmentalReports/IQCxPFVtFFKYRYdF3eujT4fiAR2wqoMQqZG-9w2WIM8s674","h":"Asbestos","rt":"Clearance","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-07-09-Clearance-Room1071-TerraEnvironmental","d":"7/9/2018","f":"/:b:/s/EnvironmentalReports/IQDHYJ1HA1FZSZxxFBSTGf0LAcOUn0B4WS6f-vkqKdJDg3A","h":"Asbestos","rt":"Clearance","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-07-06-Clearance_Reports-Room1071-TerraEnvironmental","d":"7/6/2018","f":"/:b:/s/EnvironmentalReports/IQBkQWXtynH1R7mw-kclrIsmARELCBzjOckmUXqD1zVFslg","h":"Asbestos","rt":"Clearance","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-06-25-AirSampling-Room4044-TerraEnvironmental","d":"6/25/2018","f":"/:b:/s/EnvironmentalReports/IQAYLPC8Scf-TbZNonAgS3sSAep47lSB7uZB9cUTFavgnU4","h":"Asbestos","rt":"AirSampling","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-06-20-Clearance-Rooms1054C1054D-TerraEnvironmental","d":"6/20/2018","f":"/:b:/s/EnvironmentalReports/IQBTrCmE2U3PRb-COMrogQKkAW18aMWtFeo5jdmhKEGjxvY","h":"Asbestos","rt":"Clearance","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-06-20-Clearance-Room2092A-TerraEnvironmental","d":"6/20/2018","f":"/:b:/s/EnvironmentalReports/IQCyt4St4UKoT7e5dUK1i7vmAVQhOZuhcLRBfqdTgUUi8eU","h":"Asbestos","rt":"Clearance","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Mold-2018-06-08-Surveys-Room4028-TerraEnvironmental","d":"6/8/2018","f":"/:b:/s/EnvironmentalReports/IQDM6G7qFmhNRZleIwtxCy6YARFCawR6f21bN7jWJGp9Sh0","h":"Mold","rt":"Inspection","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-05-25-Surveys-Room1072F-TerraEnvironmental","d":"5/25/2018","f":"/:b:/s/EnvironmentalReports/IQBvMNecs5ZbRqpTCPeam-N3AR5QWK03TWygLnuSXxVA2Ns","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Lead-2018-04-26-Surveys-ExteriorWalls-TerraEnvironmental","d":"4/26/2018","f":"/:b:/s/EnvironmentalReports/IQA8VxsVqY2USIzy_5piIZFnAVyTIXI6GK01Lv9n3PoB0d0","h":"Lead","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-04-18-Survey-ElevatorLobby-TerraEnvironmental","d":"4/18/2018","f":"/:b:/s/EnvironmentalReports/IQASBCTDozFKRbCJTwKjaGoGAW7EIRCJBnvKZ1TT0DFsJNU","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-04-05-Surveys-BoilerRoom-TerraEnvironmental","d":"4/5/2018","f":"/:b:/s/EnvironmentalReports/IQCNAgGlRe9IT5veoL5zZHX9AaqcBMSstRoILcA3h_T8764","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-03-20-Clearance-Rooms171A172-TerraEnvironmental","d":"3/20/2018","f":"/:b:/s/EnvironmentalReports/IQB-pnpYY9JvSIkWjhlScDcWAXQRQrKIfUVG5Vi_Jg1QQfU","h":"Asbestos","rt":"Clearance","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2018-03-01-Survey-Hallway-TerraEnvironmental","d":"3/1/2018","f":"/:b:/s/EnvironmentalReports/IQCJY_Vm8CBMQpoWDc9pk_n4ASmDLBbnIcppjT2CWa4zIk0","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2017-09-21-Survey-RoomC2098B-TerraEnvironmental","d":"9/21/2017","f":"/:b:/s/EnvironmentalReports/IQClVmCVIoJwS7xCb3tdEfRXAb4Y_wAzfHhPjj0dPYoq2_g","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-Asbestos-2017-07-10-Clearance-RM2067-TerraEnvironmental","d":"7/10/2017","f":"/:b:/s/EnvironmentalReports/IQDlSVSSY23IQ4YO11b3bSV3Aej7bTSy_IfQ4-ZHUt_0mRE","h":"Asbestos","rt":"Clearance","v":"TerraEnv","b":"KingHall"},{"t":"StatePlayhouse-Asbestos-2017-05-02-Survey-SeismicRetrofit-TerraEnvironmental","d":"5/2/2017","f":"/:b:/s/EnvironmentalReports/IQBsxmj78ucUSIMYa0y7_LJYASUTe3iFBVJsjwpNKvC9Su8","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"StatePlayhouse"},{"t":"KingHall-Asbestos-2017-04-12-Survey-RoomC157J-TerraEnvironmental","d":"4/12/2017","f":"/:b:/s/EnvironmentalReports/IQAWjYdYSXNoQYOioaXBwVuEAYnbvp3r_LEtt3C9N4Nm5so","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"KingHall-AirQuality-2017-03-31-Assessments-Room1064-ATechConsulting","d":"3/31/2017","f":"/:b:/s/EnvironmentalReports/IQAExSzMOMN-QrUUWUonkMHWAahxVaPvDiE21MvSnswWdvQ","h":"AirQuality","rt":"Assessment","v":"ATechConsulting","b":"KingHall"},{"t":"PEBuilding-Asbestos-2016-06-16-Survey-Room10-TerraEnvironmental","d":"6/16/2016","f":"/:b:/s/EnvironmentalReports/IQDx5E7CeJagQ4g1FcttbvUWAU_ttxgO3d-QC9Md_r1crj4","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"PEBuilding"},{"t":"KingHall-Asbestos-2016-04-13-Survey-Room138-TerraEnvironmental","d":"4/13/2016","f":"/:b:/s/EnvironmentalReports/IQAvFl_wVLh_TZpAur83tzUKAZa1Z750t4y8X9BAObKlTPA","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"KingHall"},{"t":"PEStadium-Asbestos-2016-03-04-Survey-WeightRoom-TerraEnvironmental","d":"3/4/2016","f":"/:b:/s/EnvironmentalReports/IQBWmVW1cyRkToWmiEqfNsswASPs4k3ed0kXcPsgnMH7TS4","h":"Asbestos","rt":"Survey","v":"TerraEnv","b":"PEStadium"},{"t":"PEBuilding-Asbestos-2015-09-28-Survey-Rooms104and105-ExecutiveEnvironmental","d":"9/28/2015","f":"/:b:/s/EnvironmentalReports/IQDj1og0OZjWQJqHOoH6d6vmAQ3gRqMmol4qiUarZPDPNho","h":"Asbestos","rt":"Survey","v":"ExecutiveEnvironmental","b":"PEBuilding"},{"t":"PEBuilding-Asbestos-2015-09-10-Survey-Rooms203and206-ExecutiveEnvironmental","d":"9/10/2015","f":"/:b:/s/EnvironmentalReports/IQB8Dt_vfg2USaFwKT37PKwjAcJeGHoeRio_PeoX80Z21U0","h":"Asbestos","rt":"Survey","v":"ExecutiveEnvironmental","b":"PEBuilding"}];
+
+// Process raw data
+let ALL=RAW.map(r=>{
+  const p=r.d.split('/');
+  const mo=+p[0]||0,dy=+p[1]||0,yr=+p[2]||0;
+  const q=mo<=3?1:mo<=6?2:mo<=9?3:4;
+  return{...r,mo,dy,yr,q,mn:MN[mo]||'',url:BASE+r.f,_s:yr*10000+mo*100+dy};
+});
+
+let sCol='_s',sDir='desc';
+
+// Filters
+function uniq(a){return[...new Set(a.filter(Boolean))]}
+function fill(id,vals,g){
+  document.getElementById(id).innerHTML=vals.map(v=>`<label><input type="checkbox" data-g="${g}" value="${x(String(v))}" onchange="rdr()">${x(String(v))}</label>`).join('');
+}
+function buildF(){
+  fill('fB',uniq(ALL.map(r=>r.b)).sort(),'b');
+  fill('fH',uniq(ALL.map(r=>r.h)).sort(),'h');
+  fill('fR',uniq(ALL.map(r=>r.rt)).sort(),'r');
+  fill('fY',uniq(ALL.map(r=>r.yr)).sort((a,b)=>b-a),'y');
+}
+function gsel(g){return[...document.querySelectorAll(`[data-g="${g}"]:checked`)].map(c=>c.value)}
+function applyF(){
+  const b=gsel('b'),h=gsel('h'),r=gsel('r'),y=gsel('y').map(Number);
+  return ALL.filter(rec=>
+    (!b.length||b.includes(rec.b))&&
+    (!h.length||h.includes(rec.h))&&
+    (!r.length||r.includes(rec.rt))&&
+    (!y.length||y.includes(rec.yr))
+  );
+}
+function clr(){document.querySelectorAll('[data-g]').forEach(c=>c.checked=false);rdr()}
+
+// Sort
+function sb(col){
+  if(sCol===col)sDir=sDir==='asc'?'desc':'asc';
+  else{sCol=col;sDir=col==='_s'?'desc':'asc';}
+  rdr();
+}
+function srt(recs){
+  const d=sDir==='asc'?1:-1;
+  return[...recs].sort((a,b)=>{
+    const av=a[sCol]??'',bv=b[sCol]??'';
+    return typeof av==='number'?(av-bv)*d:String(av).localeCompare(String(bv))*d;
+  });
+}
+function updIcons(){
+  ['t','_s','q','mn','dy','h','rt','v'].forEach(c=>{
+    const el=document.getElementById('si-'+c);
+    if(el)el.textContent=c===sCol?(sDir==='asc'?'▲':'▼'):'⇅';
+  });
+}
+
+// Render
+function rdr(){
+  const f=applyF(),rows=srt(f);
+  document.getElementById('tB').innerHTML=rows.map(r=>`<tr>
+    <td class="tdt">${x(r.t)}</td>
+    <td>${r.yr||''}</td>
+    <td>Qtr ${r.q}</td>
+    <td>${r.mn}</td>
+    <td>${r.dy||''}</td>
+    <td>${x(r.h)}</td>
+    <td>${x(r.rt)}</td>
+    <td>${x(r.v)}</td>
+    <td class="tdl"><a href="${x(r.url)}" target="_blank" rel="noopener">Open ↗</a></td>
+  </tr>`).join('');
+  document.getElementById('tF').textContent=`Total  ${rows.length} record${rows.length!==1?'s':''}`;
+  document.getElementById('sC').textContent=f.length;
+  const lat=f.reduce((a,b)=>(!a||b._s>a._s)?b:a,null);
+  document.getElementById('sL').textContent=lat?`${lat.mo}/${lat.dy}/${lat.yr}`:'—';
+  updIcons();
+}
+
+function x(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+buildF();
+rdr();
+</script>
+</body>
+</html>
