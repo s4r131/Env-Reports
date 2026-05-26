@@ -8,7 +8,7 @@
 :root{--black:#000000;--darkgray:#4A4F55;--gold:#FFCE00;--marigold:#FCB237;--golden:#A18528;--bg:#f0f2f7;--card:#fff;--border:#dde1e9;--muted:#6b7280}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);font-size:14px;color:#111827}
-header{background:var(--black);color:#fff;padding:9px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+header{background:var(--black);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,.25);border-bottom:3px solid var(--gold)}
 .brand{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;border-right:2px solid var(--gold);padding-right:12px}
 .title{font-size:15px;font-weight:600}
 .wrap{padding:12px 14px;max-width:1700px;margin:0 auto}
@@ -16,37 +16,50 @@ header{background:var(--black);color:#fff;padding:9px 18px;display:flex;align-it
 .fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;flex:1;min-width:0}
 .fc{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:9px 11px}
 .fc-h{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--black);margin-bottom:7px;padding-bottom:5px;border-bottom:2px solid var(--gold)}
-.cbl{max-height:182px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
-.ygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;max-height:182px;overflow-y:auto}
+.cbl{max-height:182px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;scrollbar-width:thin;scrollbar-color:var(--golden) transparent}
+.cbl::-webkit-scrollbar{width:4px}.cbl::-webkit-scrollbar-track{background:transparent}.cbl::-webkit-scrollbar-thumb{background:var(--golden);border-radius:2px}
+.ygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;max-height:182px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--golden) transparent}
+.ygrid::-webkit-scrollbar{width:4px}.ygrid::-webkit-scrollbar-track{background:transparent}.ygrid::-webkit-scrollbar-thumb{background:var(--golden);border-radius:2px}
 .cbl label,.ygrid label{display:flex;align-items:center;gap:5px;cursor:pointer;padding:2px 4px;border-radius:3px;font-size:12px;white-space:nowrap}
 .cbl label:hover,.ygrid label:hover{background:#fffbe6}
 input[type=checkbox]{accent-color:var(--golden);cursor:pointer;flex-shrink:0}
 .scol{display:flex;flex-direction:column;gap:8px;min-width:148px;flex-shrink:0}
-.sc{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px 13px;text-align:center}
+.sc{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:6px;padding:12px 13px;text-align:center}
 .scv{font-size:28px;font-weight:700;color:var(--black);line-height:1}
 .scv.sm{font-size:14px}
 .scl{font-size:10px;color:var(--muted);margin-top:4px}
-.btn{padding:7px;background:var(--black);color:var(--gold);border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;width:100%}
+.btn{padding:7px;background:var(--black);color:var(--gold);border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;width:100%;transition:background .15s ease}
 .btn:hover{background:var(--darkgray)}
 .tc{background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden}
-.ts{overflow-x:auto;max-height:calc(100vh - 360px);overflow-y:auto}
+.ts{overflow-x:auto;max-height:calc(100vh - 340px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--golden) transparent}
+.ts::-webkit-scrollbar{width:6px;height:6px}.ts::-webkit-scrollbar-track{background:transparent}.ts::-webkit-scrollbar-thumb{background:var(--golden);border-radius:3px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead th{background:var(--black);color:#fff;padding:7px 9px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:2;cursor:pointer;user-select:none}
 thead th:hover{background:var(--darkgray)}
 .si{margin-left:3px;font-size:9px;opacity:.7}
 tbody tr:nth-child(even){background:#f7f9fd}
+tbody tr{transition:background .1s ease}
 tbody tr:hover{background:#fffbe6}
 tbody td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
 .tdt{max-width:310px;word-break:break-word;line-height:1.3}
-.tdl a{color:var(--black);text-decoration:none;font-weight:600;padding:2px 7px;border:1px solid var(--black);border-radius:4px;white-space:nowrap;font-size:11px}
+.tdl a{color:var(--black);text-decoration:none;font-weight:600;padding:2px 7px;border:1px solid var(--black);border-radius:4px;white-space:nowrap;font-size:11px;transition:background .1s ease,color .1s ease}
 .tdl a:hover{background:var(--black);color:var(--gold)}
 tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid var(--border);font-weight:600}
 .sb{padding:4px 11px;font-size:10px;color:var(--muted);border-top:1px solid var(--border)}
-.srow{padding:8px 11px;border-bottom:1px solid var(--border)}
-.srch{padding:7px 10px;border:1px solid var(--border);border-radius:5px;font-size:13px;width:100%;background:var(--card);color:#111827;outline:none}
-.srch:focus{border-color:var(--golden)}
+.srow{padding:8px 11px;border-bottom:1px solid var(--border);position:relative;display:flex;align-items:center}
+.srow svg{position:absolute;left:20px;width:14px;height:14px;opacity:.4;pointer-events:none}
+.srch{padding:7px 10px 7px 34px;border:1px solid var(--border);border-radius:5px;font-size:13px;width:100%;background:var(--card);color:#111827;outline:none;transition:border-color .15s ease}
+.srch:focus-visible{outline:2px solid var(--golden);outline-offset:1px;border-color:var(--golden)}
 .badges{display:flex;flex-wrap:wrap;gap:4px;min-height:4px}
-.badge{background:#f0f2f7;border:1px solid var(--border);border-radius:3px;font-size:10px;padding:2px 6px;color:#111827;font-weight:600;white-space:nowrap}
+.badge{background:#fffbe6;border:1px solid var(--marigold);border-left:3px solid var(--golden);border-radius:3px;font-size:10px;padding:2px 6px;color:#111827;font-weight:600;white-space:nowrap}
+.hpill{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;font-weight:600;white-space:nowrap}
+.h-asbestos{background:#fff0e0;color:#b45309}
+.h-mold{background:#e6f4f0;color:#0f7460}
+.h-lead{background:#fde8e8;color:#b91c1c}
+.h-pcb{background:#ede9fe;color:#6d28d9}
+.h-default{background:#f3f4f6;color:#374151}
+.empty{padding:40px;text-align:center;color:var(--muted);font-size:13px}
+.empty strong{display:block;font-size:15px;color:#374151;margin-bottom:4px}
 @media(max-width:900px){.fgrid{grid-template-columns:1fr 1fr}.top{flex-direction:column}.scol{flex-direction:row;flex-wrap:wrap}.sc{flex:1;min-width:110px}}
 </style>
 </head>
@@ -71,21 +84,22 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
     </div>
   </div>
   <div class="tc">
-    <div class="srow"><input type="search" id="srch" class="srch" placeholder="Search report titles or buildings…" oninput="rdr()"></div>
+    <div class="srow">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="18" y2="18"/></svg>
+      <input type="search" id="srch" class="srch" placeholder="Search report titles or buildings…" oninput="rdr()">
+    </div>
     <div class="ts">
       <table>
         <thead><tr>
           <th onclick="sb('t')">Report Title <span class="si" id="si-t">⇅</span></th>
-          <th onclick="sb('_s')">Year <span class="si" id="si-_s">▼</span></th>
-          <th onclick="sb('mn')">Month <span class="si" id="si-mn">⇅</span></th>
-          <th onclick="sb('dy')">Day <span class="si" id="si-dy">⇅</span></th>
+          <th onclick="sb('_s')">Date <span class="si" id="si-_s">▼</span></th>
           <th onclick="sb('h')">Hazard <span class="si" id="si-h">⇅</span></th>
           <th onclick="sb('rt')">Report Type <span class="si" id="si-rt">⇅</span></th>
           <th onclick="sb('v')">Vendor <span class="si" id="si-v">⇅</span></th>
           <th>Report Link</th>
         </tr></thead>
         <tbody id="tB"></tbody>
-        <tfoot><tr><td colspan="8" id="tF"></td></tr></tfoot>
+        <tfoot><tr><td colspan="6" id="tF"></td></tr></tfoot>
       </table>
     </div>
     <div class="sb">Loading data…</div>
@@ -93,7 +107,9 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
 </div>
 <script>
 const BASE='https://csula.sharepoint.com';
-const MN=['','January','February','March','April','May','June','July','August','September','October','November','December'];
+const MN=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const HCLASS={asbestos:'h-asbestos',mold:'h-mold',lead:'h-lead',pcb:'h-pcb'};
+function hcls(h){const k=(h||'').toLowerCase();for(const t in HCLASS)if(k.includes(t))return HCLASS[t];return'h-default';}
 let ALL=[];
 let sCol='_s',sDir='desc';
 
@@ -136,7 +152,7 @@ function srt(recs){
   });
 }
 function updIcons(){
-  ['t','_s','mn','dy','h','rt','v'].forEach(c=>{
+  ['t','_s','h','rt','v'].forEach(c=>{
     const el=document.getElementById('si-'+c);
     if(el)el.textContent=c===sCol?(sDir==='asc'?'▲':'▼'):'⇅';
   });
@@ -145,20 +161,24 @@ function updIcons(){
 // Render
 function rdr(){
   const f=applyF(),rows=srt(f);
-  document.getElementById('tB').innerHTML=rows.map(r=>`<tr>
-    <td class="tdt">${x(r.t)}</td>
-    <td>${r.yr||''}</td>
-    <td>${r.mn}</td>
-    <td>${r.dy||''}</td>
-    <td>${x(r.h)}</td>
+  if(!rows.length){
+    document.getElementById('tB').innerHTML=`<tr><td colspan="6" class="empty"><strong>No reports match your filters</strong>Try clearing some filters or adjusting your search</td></tr>`;
+  } else {
+    document.getElementById('tB').innerHTML=rows.map(r=>{
+      const ds=r.mo&&r.dy&&r.yr?`${MN[r.mo]} ${r.dy}, ${r.yr}`:r.yr||'';
+      return`<tr>
+    <td class="tdt" title="${x(r.t)}">${x(r.t)}</td>
+    <td style="white-space:nowrap">${ds}</td>
+    <td><span class="hpill ${hcls(r.h)}">${x(r.h)}</span></td>
     <td>${x(r.rt)}</td>
     <td>${x(r.v)}</td>
     <td class="tdl"><a href="${x(r.url)}" target="_blank" rel="noopener">Open ↗</a></td>
-  </tr>`).join('');
+  </tr>`;}).join('');
+  }
   document.getElementById('tF').textContent=`Total  ${rows.length} record${rows.length!==1?'s':''}`;
   document.getElementById('sC').textContent=f.length;
   const lat=f.reduce((a,b)=>(!a||b._s>a._s)?b:a,null);
-  document.getElementById('sL').textContent=lat?`${lat.mo}/${lat.dy}/${lat.yr}`:'—';
+  document.getElementById('sL').textContent=lat?`${MN[lat.mo]} ${lat.dy}, ${lat.yr}`:'—';
   updIcons();
   updBadges();
 }
@@ -195,7 +215,7 @@ fetch('data.json')
     const upd=new Date(data.updated);
     const mon=upd.toLocaleString('en-US',{month:'long',timeZone:'UTC'});
     document.querySelector('.sb').textContent=
-      ALL.length+' records   |   Data as of '+mon+' '+upd.getUTCFullYear()+'   |   Cal State LA Environmental Reports';
+      ALL.length+' records   |   Data as of '+mon+' '+upd.getUTCFullYear()+'   |   Cal State LA Environmental Reports';
     buildF();
     rdr();
   })
