@@ -210,7 +210,7 @@ fetch('data.json')
         const dt=new Date(dateStr);mo=dt.getUTCMonth()+1;dy=dt.getUTCDate();yr=dt.getUTCFullYear();
       } else {const p=dateStr.split('/');mo=+p[0]||0;dy=+p[1]||0;yr=+p[2]||0;}
       const q=mo<=3?1:mo<=6?2:mo<=9?3:4;
-      return{t:title,h:hazard,rt:rtype,v:vendor,b:building,f:link,mo,dy,yr,q,mn:MN[mo]||'',url:BASE+link,_s:yr*10000+mo*100+dy};
+      return{t:title,h:hazard,rt:rtype,v:vendor,b:building,f:link,mo,dy,yr,q,mn:MN[mo]||'',url:link.startsWith('http')?link:BASE+link,_s:yr*10000+mo*100+dy};
     });
     const upd=new Date(data.updated);
     const mon=upd.toLocaleString('en-US',{month:'long',timeZone:'UTC'});
