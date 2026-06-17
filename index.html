@@ -36,20 +36,29 @@ input[type=checkbox]{accent-color:var(--golden);cursor:pointer;flex-shrink:0}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead th{background:var(--black);color:#fff;padding:7px 9px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:2;cursor:pointer;user-select:none}
 thead th:hover{background:var(--darkgray)}
+thead th.no-sort{cursor:default}
+thead th.no-sort:hover{background:var(--black)}
 .si{margin-left:3px;font-size:9px;opacity:.7}
 tbody tr:nth-child(even){background:#f7f9fd}
 tbody tr{transition:background .1s ease}
 tbody tr:hover{background:#fffbe6}
+tbody tr.selected{background:#fffbe6!important}
 tbody td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
 .tdt{max-width:310px;word-break:break-word;line-height:1.3}
 .tdl a{color:var(--black);text-decoration:none;font-weight:600;padding:2px 7px;border:1px solid var(--black);border-radius:4px;white-space:nowrap;font-size:11px;transition:background .1s ease,color .1s ease}
 .tdl a:hover{background:var(--black);color:var(--gold)}
 tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid var(--border);font-weight:600}
 .sb{padding:4px 11px;font-size:10px;color:var(--muted);border-top:1px solid var(--border)}
-.srow{padding:8px 11px;border-bottom:1px solid var(--border);position:relative;display:flex;align-items:center}
+.srow{padding:8px 11px;border-bottom:1px solid var(--border);position:relative;display:flex;align-items:center;gap:8px}
 .srow svg{position:absolute;left:20px;width:14px;height:14px;opacity:.4;pointer-events:none}
-.srch{padding:7px 10px 7px 34px;border:1px solid var(--border);border-radius:5px;font-size:13px;width:100%;background:var(--card);color:#111827;outline:none;transition:border-color .15s ease}
+.srch{padding:7px 10px 7px 34px;border:1px solid var(--border);border-radius:5px;font-size:13px;flex:1;background:var(--card);color:#111827;outline:none;transition:border-color .15s ease}
 .srch:focus-visible{outline:2px solid var(--golden);outline-offset:1px;border-color:var(--golden)}
+.sel-bar{display:none;align-items:center;gap:8px;padding:7px 11px;background:#fffbe6;border-bottom:1px solid var(--marigold);font-size:12px;font-weight:600;color:#111827;flex-wrap:wrap}
+.sel-bar.visible{display:flex}
+.sbtn{padding:5px 11px;background:var(--black);color:var(--gold);border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap;transition:background .1s ease}
+.sbtn:hover{background:var(--darkgray)}
+.sbtn.ghost{background:transparent;color:var(--darkgray);border:1px solid var(--border)}
+.sbtn.ghost:hover{background:var(--border)}
 .badges{display:flex;flex-wrap:wrap;gap:4px;padding:0 0 6px 0}
 .badge{background:#fffbe6;border:1px solid var(--marigold);border-left:3px solid var(--golden);border-radius:3px;font-size:10px;padding:2px 6px;color:#111827;font-weight:600;white-space:nowrap}
 .hpill{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;font-weight:600;white-space:nowrap}
@@ -84,6 +93,12 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
   </div>
   <div class="badges" id="badges"></div>
   <div class="tc">
+    <div class="sel-bar" id="selBar">
+      <span id="selCount"></span>
+      <button class="sbtn" onclick="dlCSV()">⬇ Download CSV</button>
+      <button class="sbtn" onclick="openAll()">Open All Selected ↗</button>
+      <button class="sbtn ghost" onclick="clrSel()">Clear Selection</button>
+    </div>
     <div class="srow">
       <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="18" y2="18"/></svg>
       <input type="search" id="srch" class="srch" placeholder="Search report titles or buildings…" oninput="rdr()">
@@ -91,15 +106,16 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
     <div class="ts">
       <table>
         <thead><tr>
+          <th class="no-sort" style="width:32px"><input type="checkbox" id="chkAll" onchange="selAll(this.checked)" title="Select all visible"></th>
           <th onclick="sb('t')">Report Title <span class="si" id="si-t">⇅</span></th>
           <th onclick="sb('_s')">Date <span class="si" id="si-_s">▼</span></th>
           <th onclick="sb('h')">Hazard <span class="si" id="si-h">⇅</span></th>
           <th onclick="sb('rt')">Report Type <span class="si" id="si-rt">⇅</span></th>
           <th onclick="sb('v')">Vendor <span class="si" id="si-v">⇅</span></th>
-          <th>Report Link</th>
+          <th class="no-sort">Report Link</th>
         </tr></thead>
         <tbody id="tB"></tbody>
-        <tfoot><tr><td colspan="6" id="tF"></td></tr></tfoot>
+        <tfoot><tr><td colspan="7" id="tF"></td></tr></tfoot>
       </table>
     </div>
     <div class="sb">Loading data…</div>
@@ -112,6 +128,44 @@ const HCLASS={asbestos:'h-asbestos',mold:'h-mold',lead:'h-lead',pcb:'h-pcb'};
 function hcls(h){const k=(h||'').toLowerCase();for(const t in HCLASS)if(k.includes(t))return HCLASS[t];return'h-default';}
 let ALL=[];
 let sCol='_s',sDir='desc';
+let SEL=new Set();
+
+// Selection
+function togSel(idx){SEL.has(idx)?SEL.delete(idx):SEL.add(idx);updSel();}
+function selAll(checked){
+  const visible=srt(applyF());
+  if(checked)visible.forEach(r=>SEL.add(r._idx));
+  else visible.forEach(r=>SEL.delete(r._idx));
+  rdr();
+}
+function clrSel(){SEL.clear();rdr();}
+function updSel(){
+  const n=SEL.size;
+  const bar=document.getElementById('selBar');
+  bar.classList.toggle('visible',n>0);
+  document.getElementById('selCount').textContent=`${n} report${n!==1?'s':''} selected`;
+  const visible=srt(applyF());
+  const allChk=document.getElementById('chkAll');
+  if(allChk)allChk.checked=visible.length>0&&visible.every(r=>SEL.has(r._idx));
+}
+function dlCSV(){
+  const rows=ALL.filter(r=>SEL.has(r._idx));
+  const esc=v=>`"${String(v).replace(/"/g,'""')}"`;
+  const ds=r=>r.mo&&r.dy&&r.yr?`${MN[r.mo]} ${r.dy}, ${r.yr}`:r.yr||'';
+  const csv=['Report Title,Date,Hazard,Report Type,Vendor,Link',
+    ...rows.map(r=>[esc(r.t),esc(ds(r)),esc(r.h),esc(r.rt),esc(r.v),esc(r.url)].join(','))
+  ].join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='environmental-reports.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function openAll(){
+  const rows=ALL.filter(r=>SEL.has(r._idx));
+  if(rows.length>10&&!confirm(`Open ${rows.length} tabs?`))return;
+  rows.forEach(r=>window.open(r.url,'_blank','noopener'));
+}
 
 // Filters
 function uniq(a){return[...new Set(a.filter(Boolean))]}
@@ -162,11 +216,13 @@ function updIcons(){
 function rdr(){
   const f=applyF(),rows=srt(f);
   if(!rows.length){
-    document.getElementById('tB').innerHTML=`<tr><td colspan="6" class="empty"><strong>No reports match your filters</strong>Try clearing some filters or adjusting your search</td></tr>`;
+    document.getElementById('tB').innerHTML=`<tr><td colspan="7" class="empty"><strong>No reports match your filters</strong>Try clearing some filters or adjusting your search</td></tr>`;
   } else {
     document.getElementById('tB').innerHTML=rows.map(r=>{
       const ds=r.mo&&r.dy&&r.yr?`${MN[r.mo]} ${r.dy}, ${r.yr}`:r.yr||'';
-      return`<tr>
+      const chk=SEL.has(r._idx)?'checked':'';
+      return`<tr class="${SEL.has(r._idx)?'selected':''}">
+    <td style="width:32px;text-align:center"><input type="checkbox" ${chk} onchange="togSel(${r._idx})"></td>
     <td class="tdt" title="${x(r.t)}">${x(r.t)}</td>
     <td style="white-space:nowrap">${ds}</td>
     <td><span class="hpill ${hcls(r.h)}">${x(r.h)}</span></td>
@@ -181,6 +237,7 @@ function rdr(){
   document.getElementById('sL').textContent=lat?`${MN[lat.mo]} ${lat.dy}, ${lat.yr}`:'—';
   updIcons();
   updBadges();
+  updSel();
 }
 function updBadges(){
   const grps=[{g:'b',l:'Building'},{g:'h',l:'Hazard'},{g:'r',l:'Type'},{g:'y',l:'Year'}];
@@ -196,7 +253,7 @@ function x(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 fetch('data.json')
   .then(r=>r.json())
   .then(data=>{
-    ALL=data.records.map(r=>{
+    ALL=data.records.map((r,idx)=>{
       const sv=v=>typeof v==='object'&&v!==null?(v.Value||v.value||''):v||'';
       const title=sv(r.ReportTitle)||r.Title||r.t||'';
       const link=sv(r.FileLink)||r.f||'';
@@ -210,7 +267,7 @@ fetch('data.json')
         const dt=new Date(dateStr);mo=dt.getUTCMonth()+1;dy=dt.getUTCDate();yr=dt.getUTCFullYear();
       } else {const p=dateStr.split('/');mo=+p[0]||0;dy=+p[1]||0;yr=+p[2]||0;}
       const q=mo<=3?1:mo<=6?2:mo<=9?3:4;
-      return{t:title,h:hazard,rt:rtype,v:vendor,b:building,f:link,mo,dy,yr,q,mn:MN[mo]||'',url:link.startsWith('http')?link:BASE+link,_s:yr*10000+mo*100+dy};
+      return{t:title,h:hazard,rt:rtype,v:vendor,b:building,f:link,mo,dy,yr,q,mn:MN[mo]||'',url:link.startsWith('http')?link:BASE+link,_s:yr*10000+mo*100+dy,_idx:idx};
     });
     const upd=new Date(data.updated);
     const mon=upd.toLocaleString('en-US',{month:'long',timeZone:'UTC'});
