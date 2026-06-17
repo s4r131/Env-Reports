@@ -50,7 +50,8 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
 .srow svg{position:absolute;left:20px;width:14px;height:14px;opacity:.4;pointer-events:none}
 .srch{padding:7px 10px 7px 34px;border:1px solid var(--border);border-radius:5px;font-size:13px;width:100%;background:var(--card);color:#111827;outline:none;transition:border-color .15s ease}
 .srch:focus-visible{outline:2px solid var(--golden);outline-offset:1px;border-color:var(--golden)}
-.badges{display:flex;flex-wrap:wrap;gap:4px;min-height:4px}
+.badges{display:flex;flex-wrap:wrap;gap:4px;min-height:4px;max-height:64px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--golden) transparent}
+.badges::-webkit-scrollbar{width:4px}.badges::-webkit-scrollbar-track{background:transparent}.badges::-webkit-scrollbar-thumb{background:var(--golden);border-radius:2px}
 .badge{background:#fffbe6;border:1px solid var(--marigold);border-left:3px solid var(--golden);border-radius:3px;font-size:10px;padding:2px 6px;color:#111827;font-weight:600;white-space:nowrap}
 .hpill{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;font-weight:600;white-space:nowrap}
 .h-asbestos{background:#fff0e0;color:#b45309}
