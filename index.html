@@ -147,8 +147,26 @@ function updSel(){
 function dlUrl(url){return url+(url.includes('?')?'&':'?')+'download=1';}
 function openAll(){
   const rows=ALL.filter(r=>SEL.has(r._idx));
-  if(rows.length>10&&!confirm(`Download ${rows.length} reports?`))return;
-  rows.forEach(r=>window.open(dlUrl(r.url),'_blank','noopener'));
+  if(!rows.length)return;
+  const items=rows.map(r=>`<li><a href="${x(dlUrl(r.url))}" target="_blank" rel="noopener">${x(r.t)}</a></li>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Download Reports</title>
+<style>body{font-family:Segoe UI,sans-serif;padding:28px;max-width:860px;margin:0 auto;color:#111}
+h2{margin-bottom:6px}p.sub{color:#6b7280;font-size:13px;margin-bottom:20px}
+ul{list-style:none;padding:0}li{padding:10px 0;border-bottom:1px solid #e5e7eb}
+a{color:#000;font-weight:600;text-decoration:none;font-size:13px}
+a:hover{text-decoration:underline}
+.note{margin-top:24px;font-size:11px;color:#9ca3af}</style></head>
+<body><h2>${rows.length} Report${rows.length!==1?'s':''} Selected</h2>
+<p class="sub">Click each link to download. You must be signed into SharePoint.</p>
+<ul>${items}</ul>
+<p class="note">Cal State LA Environmental Reports Dashboard</p>
+</body></html>`;
+  const blob=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.target='_blank';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
 }
 
 // Filters
