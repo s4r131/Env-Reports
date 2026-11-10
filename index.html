@@ -92,8 +92,7 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
   <div class="tc">
     <div class="sel-bar" id="selBar">
       <span id="selCount"></span>
-      <button class="sbtn" onclick="dlCSV()">⬇ Download CSV</button>
-      <button class="sbtn" onclick="openAll()">Open All Selected ↗</button>
+      <button class="sbtn" onclick="openAll()">Open Selected Reports ↗</button>
       <button class="sbtn ghost" onclick="clrSel()">Clear Selection</button>
     </div>
     <div class="srow">
@@ -144,19 +143,6 @@ function updSel(){
   const visible=srt(applyF());
   const allChk=document.getElementById('chkAll');
   if(allChk)allChk.checked=visible.length>0&&visible.every(r=>SEL.has(r._idx));
-}
-function dlCSV(){
-  const rows=ALL.filter(r=>SEL.has(r._idx));
-  const esc=v=>`"${String(v).replace(/"/g,'""')}"`;
-  const ds=r=>r.mo&&r.dy&&r.yr?`${MN[r.mo]} ${r.dy}, ${r.yr}`:r.yr||'';
-  const csv=['Report Title,Date,Hazard,Report Type,Vendor,Link',
-    ...rows.map(r=>[esc(r.t),esc(ds(r)),esc(r.h),esc(r.rt),esc(r.v),esc(r.url)].join(','))
-  ].join('\r\n');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download='environmental-reports.csv';
-  a.click();
-  URL.revokeObjectURL(a.href);
 }
 function openAll(){
   const rows=ALL.filter(r=>SEL.has(r._idx));
