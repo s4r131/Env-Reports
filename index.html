@@ -161,12 +161,13 @@ fetch('data.json')
   .then(r=>r.json())
   .then(data=>{
     ALL=data.records.map(r=>{
-      const title=r.ReportTitle||r.t||'';
-      const link=r.FileLink||r.f||'';
-      const hazard=r.Hazard||r.h||'';
-      const rtype=r.ReportType||r.rt||'';
-      const vendor=r.Vendor||r.v||'';
-      const building=r.BuildingFolderKey||r.b||'';
+      const sv=v=>typeof v==='object'&&v!==null?(v.Value||v.value||''):v||'';
+      const title=sv(r.ReportTitle)||r.Title||r.t||'';
+      const link=sv(r.FileLink)||r.f||'';
+      const hazard=sv(r.Hazard)||r.h||'';
+      const rtype=sv(r.ReportType)||r.rt||'';
+      const vendor=sv(r.Vendor)||r.v||'';
+      const building=sv(r.BuildingFolderKey)||r.b||'';
       const dateStr=r.ReportDate||r.d||'';
       let mo=0,dy=0,yr=0;
       if(dateStr.includes('T')||dateStr.includes('-')){
