@@ -92,7 +92,7 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
   <div class="tc">
     <div class="sel-bar" id="selBar">
       <span id="selCount"></span>
-      <button class="sbtn" onclick="openAll()">Open Selected Reports ↗</button>
+      <button class="sbtn" onclick="openAll()">Download Selected ↓</button>
       <button class="sbtn ghost" onclick="clrSel()">Clear Selection</button>
     </div>
     <div class="srow">
@@ -144,10 +144,11 @@ function updSel(){
   const allChk=document.getElementById('chkAll');
   if(allChk)allChk.checked=visible.length>0&&visible.every(r=>SEL.has(r._idx));
 }
+function dlUrl(url){return url+(url.includes('?')?'&':'?')+'download=1';}
 function openAll(){
   const rows=ALL.filter(r=>SEL.has(r._idx));
-  if(rows.length>10&&!confirm(`Open ${rows.length} tabs?`))return;
-  rows.forEach(r=>window.open(r.url,'_blank','noopener'));
+  if(rows.length>10&&!confirm(`Download ${rows.length} reports?`))return;
+  rows.forEach(r=>window.open(dlUrl(r.url),'_blank','noopener'));
 }
 
 // Filters
@@ -211,7 +212,7 @@ function rdr(){
     <td><span class="hpill ${hcls(r.h)}">${x(r.h)}</span></td>
     <td>${x(r.rt)}</td>
     <td>${x(r.v)}</td>
-    <td class="tdl"><a href="${x(r.url)}" target="_blank" rel="noopener">Open ↗</a></td>
+    <td class="tdl"><a href="${x(dlUrl(r.url))}" target="_blank" rel="noopener">Download ↓</a></td>
   </tr>`;}).join('');
   }
   document.getElementById('tF').textContent=`Total  ${rows.length} record${rows.length!==1?'s':''}`;
