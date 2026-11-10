@@ -143,7 +143,6 @@ function updSel(){
   const allChk=document.getElementById('chkAll');
   if(allChk)allChk.checked=visible.length>0&&visible.every(r=>SEL.has(r._idx));
 }
-function dlUrl(url){return url+(url.includes('?')?'&':'?')+'download=1';}
 
 // Filters
 function uniq(a){return[...new Set(a.filter(Boolean))]}
@@ -206,7 +205,7 @@ function rdr(){
     <td><span class="hpill ${hcls(r.h)}">${x(r.h)}</span></td>
     <td>${x(r.rt)}</td>
     <td>${x(r.v)}</td>
-    <td class="tdl"><a href="${x(dlUrl(r.url))}" target="_blank" rel="noopener">Download ↓</a></td>
+    <td class="tdl"><a href="${x(r.url)}" target="_blank" rel="noopener">Open ↗</a></td>
   </tr>`;}).join('');
   }
   document.getElementById('tF').textContent=`Total  ${rows.length} record${rows.length!==1?'s':''}`;
