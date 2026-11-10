@@ -161,10 +161,19 @@ fetch('data.json')
   .then(r=>r.json())
   .then(data=>{
     ALL=data.records.map(r=>{
-      const p=r.d.split('/');
-      const mo=+p[0]||0,dy=+p[1]||0,yr=+p[2]||0;
+      const title=r.ReportTitle||r.t||'';
+      const link=r.FileLink||r.f||'';
+      const hazard=r.Hazard||r.h||'';
+      const rtype=r.ReportType||r.rt||'';
+      const vendor=r.Vendor||r.v||'';
+      const building=r.BuildingFolderKey||r.b||'';
+      const dateStr=r.ReportDate||r.d||'';
+      let mo=0,dy=0,yr=0;
+      if(dateStr.includes('T')||dateStr.includes('-')){
+        const dt=new Date(dateStr);mo=dt.getUTCMonth()+1;dy=dt.getUTCDate();yr=dt.getUTCFullYear();
+      } else {const p=dateStr.split('/');mo=+p[0]||0;dy=+p[1]||0;yr=+p[2]||0;}
       const q=mo<=3?1:mo<=6?2:mo<=9?3:4;
-      return{...r,mo,dy,yr,q,mn:MN[mo]||'',url:BASE+r.f,_s:yr*10000+mo*100+dy};
+      return{t:title,h:hazard,rt:rtype,v:vendor,b:building,f:link,mo,dy,yr,q,mn:MN[mo]||'',url:BASE+link,_s:yr*10000+mo*100+dy};
     });
     const upd=new Date(data.updated);
     const mon=upd.toLocaleString('en-US',{month:'long',timeZone:'UTC'});
