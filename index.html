@@ -59,8 +59,6 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
 .sbtn:hover{background:var(--darkgray)}
 .sbtn.ghost{background:transparent;color:var(--darkgray);border:1px solid var(--border)}
 .sbtn.ghost:hover{background:var(--border)}
-.badges{display:flex;flex-wrap:wrap;gap:4px;padding:0 0 6px 0}
-.badge{background:#fffbe6;border:1px solid var(--marigold);border-left:3px solid var(--golden);border-radius:3px;font-size:10px;padding:2px 6px;color:#111827;font-weight:600;white-space:nowrap}
 .hpill{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;font-weight:600;white-space:nowrap}
 .h-asbestos{background:#fff0e0;color:#b45309}
 .h-mold{background:#e6f4f0;color:#0f7460}
@@ -91,7 +89,6 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
       <button class="btn" onclick="clr()">Clear All Filters</button>
     </div>
   </div>
-  <div class="badges" id="badges"></div>
   <div class="tc">
     <div class="sel-bar" id="selBar">
       <span id="selCount"></span>
@@ -236,16 +233,7 @@ function rdr(){
   const lat=f.reduce((a,b)=>(!a||b._s>a._s)?b:a,null);
   document.getElementById('sL').textContent=lat?`${MN[lat.mo]} ${lat.dy}, ${lat.yr}`:'—';
   updIcons();
-  updBadges();
   updSel();
-}
-function updBadges(){
-  const grps=[{g:'b',l:'Building'},{g:'h',l:'Hazard'},{g:'r',l:'Type'},{g:'y',l:'Year'}];
-  const q=(document.getElementById('srch')?.value||'').trim();
-  let html='';
-  grps.forEach(({g,l})=>gsel(g).forEach(v=>{html+=`<span class="badge">${l}: ${x(v)}</span>`;}));
-  if(q)html+=`<span class="badge">Search: ${x(q)}</span>`;
-  document.getElementById('badges').innerHTML=html;
 }
 
 function x(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
