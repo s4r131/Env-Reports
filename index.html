@@ -67,19 +67,6 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
 .h-default{background:#f3f4f6;color:#374151}
 .empty{padding:40px;text-align:center;color:var(--muted);font-size:13px}
 .empty strong{display:block;font-size:15px;color:#374151;margin-bottom:4px}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
-.modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:8px;padding:24px;max-width:700px;width:90%;max-height:80vh;display:flex;flex-direction:column;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
-.modal-hd{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold);padding-bottom:10px}
-.modal-hd h3{font-size:15px;font-weight:700}
-.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
-.modal-close:hover{color:#111}
-.modal-list{overflow-y:auto;display:flex;flex-direction:column;gap:6px;flex:1;scrollbar-width:thin;scrollbar-color:var(--golden) transparent}
-.modal-list a{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:5px;text-decoration:none;color:#111;font-size:12px;gap:12px}
-.modal-list a:hover{background:#fffbe6;border-color:var(--marigold)}
-.modal-list a span.ml-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.modal-list a span.ml-dl{font-weight:700;font-size:11px;white-space:nowrap;color:var(--golden)}
-.modal-note{font-size:10px;color:var(--muted)}
 @media(max-width:900px){.fgrid{grid-template-columns:1fr 1fr}.top{flex-direction:column}.scol{flex-direction:row;flex-wrap:wrap}.sc{flex:1;min-width:110px}}
 </style>
 </head>
@@ -105,7 +92,6 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
   <div class="tc">
     <div class="sel-bar" id="selBar">
       <span id="selCount"></span>
-      <button class="sbtn" onclick="openAll()">Download Selected ↓</button>
       <button class="sbtn ghost" onclick="clrSel()">Clear Selection</button>
     </div>
     <div class="srow">
@@ -128,16 +114,6 @@ tfoot td{padding:6px 9px;color:var(--muted);font-size:11px;border-top:2px solid 
       </table>
     </div>
     <div class="sb">Loading data…</div>
-  </div>
-</div>
-<div class="modal-bg" id="dlModal" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="modal-hd">
-      <h3 id="modalTitle">Selected Reports</h3>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-list" id="modalList"></div>
-    <p class="modal-note">Click a report to download. You must be signed into SharePoint.</p>
   </div>
 </div>
 <script>
@@ -168,18 +144,6 @@ function updSel(){
   if(allChk)allChk.checked=visible.length>0&&visible.every(r=>SEL.has(r._idx));
 }
 function dlUrl(url){return url+(url.includes('?')?'&':'?')+'download=1';}
-function openAll(){
-  const rows=ALL.filter(r=>SEL.has(r._idx));
-  if(!rows.length)return;
-  document.getElementById('modalTitle').textContent=`${rows.length} Report${rows.length!==1?'s':''} Selected`;
-  document.getElementById('modalList').innerHTML=rows.map(r=>
-    `<a href="${x(dlUrl(r.url))}" target="_blank" rel="noopener">
-      <span class="ml-title" title="${x(r.t)}">${x(r.t)}</span>
-      <span class="ml-dl">Download ↓</span>
-    </a>`).join('');
-  document.getElementById('dlModal').classList.add('open');
-}
-function closeModal(){document.getElementById('dlModal').classList.remove('open');}
 
 // Filters
 function uniq(a){return[...new Set(a.filter(Boolean))]}
